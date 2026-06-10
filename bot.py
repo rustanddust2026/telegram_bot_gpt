@@ -6,6 +6,8 @@ from util import (load_message, send_text, send_image, show_main_menu,
                   default_callback_handler)
 
 
+
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = load_message('main')
     await send_image(update, context, 'main')
