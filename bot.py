@@ -24,8 +24,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     })
 
 
-chat_gpt = ChatGptService('ChatGPT TOKEN')
-app = ApplicationBuilder().token('Telegram TOKEN').build()
+chat_gpt = ChatGptService(credentials.ChatGPT_TOKEN)
+app = ApplicationBuilder().token(credentials.BOT_TOKEN).build()
 
 # Зареєструвати обробник команди можна так:
 # app.add_handler(CommandHandler('command', handler_func))
