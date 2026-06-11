@@ -1,4 +1,4 @@
- from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Message, \
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Message, \
     BotCommand, MenuButtonCommands, BotCommandScopeChat, MenuButtonDefault
 from telegram import Update
 from telegram.constants import ParseMode

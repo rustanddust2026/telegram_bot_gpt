@@ -25,16 +25,16 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def random(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await send_image(update, context, 'random')
-    ##prompt = load_prompt('random')
-    #response = await chat_gpt.send_question(prompt," give random facts")
+    prompt = load_prompt('random')
+    response = await chat_gpt.send_question(prompt,"Give random facts")
     ##await send_text(update, context, response)
-    await send_text_buttons(update,context,response,{"End":"End"," More":"Wanna more facts "})
+    await send_text_buttons(update,context,response,{"random_end":"End","random_more":"Wanna more facts "})
 
 async def buttons_handler(update: Update, context):
     query = update.callback_query.data
-    if query == "End":
+    if query == "random_end":
         await start(update, context)
-    elif query == "More":
+    elif query == "random_more":
         await random(update, context)
     await update.callback_query.answer()
 
