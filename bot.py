@@ -44,11 +44,11 @@ async def buttons_handler(update: Update, context):
 chat_gpt = ChatGptService(credentials.ChatGPT_TOKEN)
 app = ApplicationBuilder().token(credentials.BOT_TOKEN).build()
 
-# Зареєструвати обробник команди можна так:
+#Обробники команд:
 app.add_handler(CommandHandler('start', start))
 app.add_handler(CommandHandler('random', random))
 
-# Зареєструвати обробник колбеку можна так:
+#Обробники колбеку:
 app.add_handler(CallbackQueryHandler(buttons_handler, pattern='^random_.*'))
 app.add_handler(CallbackQueryHandler(default_callback_handler))
 app.run_polling()
