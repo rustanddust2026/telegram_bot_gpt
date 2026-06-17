@@ -18,8 +18,7 @@ class ChatGptService:
             model="gpt-3.5-turbo",  # gpt-4o,  gpt-4-turbo,    gpt-3.5-turbo,  GPT-4o mini
             messages=self.message_list,
             max_tokens=3000,
-            temperature=0.9
-        )
+            temperature=0.9)
         message = completion.choices[0].message
         self.message_list.append(message)
         return message.content
