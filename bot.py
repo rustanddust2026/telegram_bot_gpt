@@ -40,8 +40,8 @@ QUIZ_RESULT_BUTTONS = {
 
 def clear_quiz_state(user_id: int) -> None:
     quiz_topic.pop(user_id, None)
-    #quiz_score.pop(user_id, None)
-    #quiz_waiting.pop(user_id, None)
+    quiz_score.pop(user_id, None)
+    quiz_waiting.pop(user_id, None)
 
 
 async def show_quiz_topics(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -51,14 +51,14 @@ async def show_quiz_topics(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def send_quiz_question(update: Update,context: ContextTypes.DEFAULT_TYPE,user_id: int,topic_key: str):
     quiz_topic[user_id] = topic_key
     response = await chat_gpt.send_question(load_prompt("quiz"), topic_key)
-    # quiz_waiting[id_of_user] = True
-    # await send_text(update, context, response)
+    quiz_waiting[id_of_user] = True
+    await send_text(update, context, response)
 
 
 async def send_quiz_more_question(update: Update,context: ContextTypes.DEFAULT_TYPE,id_of_user: int,):
     response = await chat_gpt.add_message("quiz_more")
-    # quiz_waiting[id_of_user] = True
-    # await send_text(update, context, response)
+    quiz_waiting[id_of_user] = True
+    await send_text(update, context, response)
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -195,8 +195,8 @@ async def talk_buttons_handler(update: Update, context: ContextTypes.DEFAULT_TYP
 async def quiz(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     chat_modes[user_id] = "QUIZ_MODE"
-    # quiz_score[user_id] = 0
-    # quiz_waiting[user_id] = False
+    quiz_score[user_id] = 0
+    quiz_waiting[user_id] = False
     quiz_topic.pop(user_id, None)
 
     await send_image(update, context, "quiz")
