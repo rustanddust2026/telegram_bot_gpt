@@ -18,8 +18,7 @@ class ChatGptService:
             model="gpt-3.5-turbo",  # gpt-4o,  gpt-4-turbo,    gpt-3.5-turbo,  GPT-4o mini
             messages=self.message_list,
             max_tokens=3000,
-            temperature=0.9
-        )
+            temperature=0.9)
         message = completion.choices[0].message
         self.message_list.append(message)
         return message.content
@@ -37,3 +36,20 @@ class ChatGptService:
         self.message_list.append({"role": "system", "content": prompt_text})
         self.message_list.append({"role": "user", "content": message_text})
         return await self.send_message_list()
+
+    def speech_to_text(self, audio_file_path: str) -> str:
+        with open(audio_file_path, "rb") as audio_file:
+            transcription = self.client.audio.transcriptions.create(
+                model="whisper-1",
+                file=audio_file,
+            )
+        return transcription.text
+
+    def text_to_speech(self, text: str, output_path: str) -> None:
+        response = self.client.audio.speech.create(
+            model="tts-1",
+            voice="alloy",
+            input=text,
+            response_format="opus",
+        )
+        response.stream_to_file(output_path)
