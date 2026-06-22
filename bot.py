@@ -51,29 +51,26 @@ async def show_quiz_topics(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def send_quiz_question(update: Update,context: ContextTypes.DEFAULT_TYPE,user_id: int,topic_key: str):
     quiz_topic[user_id] = topic_key
     response = await chat_gpt.send_question(load_prompt("quiz"), topic_key)
-    # quiz_waiting[user_id] = True
+    # quiz_waiting[id_of_user] = True
     # await send_text(update, context, response)
 
 
-async def send_quiz_more_question(update: Update,context: ContextTypes.DEFAULT_TYPE,user_id: int,):
+async def send_quiz_more_question(update: Update,context: ContextTypes.DEFAULT_TYPE,id_of_user: int,):
     response = await chat_gpt.add_message("quiz_more")
-    # quiz_waiting[user_id] = True
+    # quiz_waiting[id_of_user] = True
     # await send_text(update, context, response)
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    user_id = update.effective_user.id
-    chat_modes[user_id] = None
-    current_person.pop(user_id, None)
-    clear_quiz_state(user_id)
+    id_of_user = update.effective_user.id
+    chat_modes[id_of_user] = None
+    current_person.pop(id_of_user, None)
+    clear_quiz_state(id_of_user)
 
     text = load_message("main")
     await send_image(update, context, "main")
     await send_text(update, context, text)
-    await show_main_menu(
-        update,
-        context,
-        {
+    await show_main_menu(update,context,{
             "start": "Головне меню",
             "random": "Дізнатися випадковий цікавий факт 🧠",
             "gpt": "Задати питання чату GPT 🤖",
@@ -113,8 +110,8 @@ async def voice(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def voice_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    user_id = update.effective_user.id
-    if chat_modes.get(user_id) != "VOICE_MODE":
+    id_of_user = update.effective_user.id
+    if chat_modes.get(id_of_user) != "VOICE_MODE":
         await send_text(
             update,
             context,
@@ -153,10 +150,10 @@ async def voice_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def voice_buttons_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query.data
-    user_id = update.callback_query.from_user.id
+    id_of_user = update.callback_query.from_user.id
 
     if query == "voice_end":
-        chat_modes[user_id] = None
+        chat_modes[id_of_user] = None
         await start(update, context)
 
     await update.callback_query.answer()
@@ -285,6 +282,7 @@ async def text_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 chat_gpt = ChatGptService(credentials.ChatGPT_TOKEN)
 app = ApplicationBuilder().token(credentials.BOT_TOKEN).build()
 
+# Зареєструвати обробник колбеку можна так:
 app.add_handler(CommandHandler("start", start))
 app.add_handler(CommandHandler("random", random))
 app.add_handler(CommandHandler("gpt", gpt))
@@ -293,7 +291,7 @@ app.add_handler(CommandHandler("quiz", quiz))
 app.add_handler(CommandHandler("voice", voice))
 app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, text_handler))
 app.add_handler(MessageHandler(filters.VOICE, voice_handler))
-
+# Зареєструвати обробник колбеку можна так:
 app.add_handler(CallbackQueryHandler(random_buttons_handler, pattern="^random_.*"))
 app.add_handler(CallbackQueryHandler(gpt_buttons_handler, pattern="^gpt_.*"))
 app.add_handler(CallbackQueryHandler(talk_buttons_handler, pattern="^talk_.*"))
