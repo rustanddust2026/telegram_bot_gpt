@@ -51,13 +51,13 @@ async def show_quiz_topics(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def send_quiz_question(update: Update,context: ContextTypes.DEFAULT_TYPE,user_id: int,topic_key: str):
     quiz_topic[user_id] = topic_key
     response = await chat_gpt.send_question(load_prompt("quiz"), topic_key)
-    quiz_waiting[id_of_user] = True
+    quiz_waiting[user_id] = True
     await send_text(update, context, response)
 
 
 async def send_quiz_more_question(update: Update,context: ContextTypes.DEFAULT_TYPE,id_of_user: int,):
     response = await chat_gpt.add_message("quiz_more")
-    quiz_waiting[id_of_user] = True
+    quiz_waiting[user_id] = True
     await send_text(update, context, response)
 
 
@@ -110,7 +110,7 @@ async def voice(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def voice_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    id_of_user = update.effective_user.id
+    user_id = update.effective_user.id
     if chat_modes.get(user_id) != "VOICE_MODE":
         await send_text(
             update,
@@ -150,7 +150,7 @@ async def voice_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def voice_buttons_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query.data
-    id_of_user = update.callback_query.from_user.id
+    user_id = update.callback_query.from_user.id
 
     if query == "voice_end":
         chat_modes[user_id] = None
