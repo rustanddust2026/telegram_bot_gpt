@@ -57,6 +57,14 @@ async def send_image(update: Update, context: ContextTypes.DEFAULT_TYPE,
                                             photo=image)
 
 
+# надсилає в чат голосове повідомлення
+async def send_voice_file(update: Update, context: ContextTypes.DEFAULT_TYPE,
+                          file_path: str) -> Message:
+    with open(file_path, 'rb') as voice:
+        return await context.bot.send_voice(chat_id=update.effective_chat.id,
+                                            voice=voice)
+
+
 # відображає команду та головне меню
 async def show_main_menu(update: Update, context: ContextTypes.DEFAULT_TYPE,
                          commands: dict):
