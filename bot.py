@@ -63,9 +63,9 @@ async def send_quiz_more_question(update: Update,context: ContextTypes.DEFAULT_T
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     id_of_user = update.effective_user.id
-    chat_modes[id_of_user] = None
-    current_person.pop(id_of_user, None)
-    clear_quiz_state(id_of_user)
+    chat_modes[user_id] = None
+    current_person.pop(user_id, None)
+    clear_quiz_state(user_id)
 
     text = load_message("main")
     await send_image(update, context, "main")
@@ -111,7 +111,7 @@ async def voice(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def voice_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     id_of_user = update.effective_user.id
-    if chat_modes.get(id_of_user) != "VOICE_MODE":
+    if chat_modes.get(user_id) != "VOICE_MODE":
         await send_text(
             update,
             context,
@@ -153,7 +153,7 @@ async def voice_buttons_handler(update: Update, context: ContextTypes.DEFAULT_TY
     id_of_user = update.callback_query.from_user.id
 
     if query == "voice_end":
-        chat_modes[id_of_user] = None
+        chat_modes[user_id] = None
         await start(update, context)
 
     await update.callback_query.answer()
